@@ -1,0 +1,17 @@
+{% load static %}
+<html>
+    <head>
+        <title>Riotcat.org</title>
+        <link rel="stylesheet" href="{% static 'web/css/bootstrap/bootstrap.css' %}">
+        <link rel="stylesheet" href="{% static 'web/css/fontawesome/all.css' %}">
+        <link rel="stylesheet" href="{% static 'web/css/styles.css' %}">
+        <script src="{% static 'web/js/jquery.js' %}"></script>
+        <script src="{% static 'web/js/bootstrap.js' %}"></script>
+        <link rel="icon" type="image/png" href="{% static 'web/img/favicon.ico' %}">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+        {% block content %}
+        {% endblock %}
+    </body>
+</html>    

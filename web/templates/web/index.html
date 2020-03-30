@@ -1,18 +1,9 @@
+{% extends 'web/layout.html' %}
 {% load static %}
-<html>
-    <head>
-        <title>Riotcat.org</title>
-        <link rel="stylesheet" href="{% static 'web/css/bootstrap/bootstrap.css' %}">
-        <link rel="stylesheet" href="{% static 'web/css/fontawesome/all.css' %}">
-        <link rel="stylesheet" href="{% static 'web/css/styles.css' %}">
-        <script src="{% static 'web/js/jquery.js' %}"></script>
-        <script src="{% static 'web/js/bootstrap.js' %}"></script>
-        <link rel="icon" type="image/png" href="{% static 'web/img/favicon.ico' %}">
-    </head>
-    <body>
+{% block content %}
         <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3 navbar-scrolled" id="mainNav">
             <div class="container">
-                <a class="navbar-brand" href="#">Riotcat.org</a><button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                <a class="navbar-brand" href="#"><img src="{% static 'web/img/logo.png' %}" width="50px" alt="Logo" style="margin-right: 10px;">Riotcat.org</a><button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav nav ml-auto my-2 my-lg-0" role="tablist" id="menu">
                         <li class="nav-item"><a class="nav-link" id="services-tab" data-toggle="tab" href="#services" role="tab" aria-controls="services" aria-selected="false">Services</a></li>
@@ -35,7 +26,7 @@
                                     <div class="row">
                                         {% for service in service_list %}
                                             <div class="col-md-6">
-                                                <button type="button" class="btn btn-primary btn-lg " data-toggle="modal" data-target="#modal-{{service.id}}" style="font-size: 40px; border-radius: 10px; width: 90%; margin-bottom: 25px; border: 2px white solid;">{{service.title}}</button>
+                                                <button type="button" class="btn btn-primary btn-lg " data-toggle="modal" data-target="#modal-{{service.id}}" style="font-size: 25px; border-radius: 10px; width: 90%; margin-bottom: 25px;">{{service.title}}</button>
                                                 <br />
                                             </div>
                                         {% endfor %}  
@@ -152,7 +143,6 @@
                 </div>
             </div>
         {% endfor %}
-    </body>
     <script>
         $(function () {           
             // Javascript to enable link to tab
@@ -167,4 +157,4 @@
             })
         });
     </script>
-</html>
+{% endblock %}
