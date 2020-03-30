@@ -10048,6 +10048,18 @@ hr.light {
 .aaaaaaa{
   background: linear-gradient(to bottom, rgba(92, 77, 66, 0.8) 0%, rgba(92, 77, 66, 0.8) 100%), url("../assets/img/bg-masthead.jpg");
 }
+
+.service{
+  overflow-x: hidden; 
+  padding-top: 150px;
+  background: linear-gradient(to bottom, rgba(00, 00, 00, 0.8) 0%, rgba(00, 00, 00, 0.8) 100%), url("../assets/img/bg-masthead.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  background-size: cover;
+  
+}
+
 header.masthead {
   padding-top: 10rem;
   padding-bottom: calc(10rem - 4.5rem);  
