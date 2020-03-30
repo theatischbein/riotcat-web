@@ -1,0 +1,170 @@
+{% load static %}
+<html>
+    <head>
+        <title>Riotcat.org</title>
+        <link rel="stylesheet" href="{% static 'web/css/bootstrap/bootstrap.css' %}">
+        <link rel="stylesheet" href="{% static 'web/css/fontawesome/all.css' %}">
+        <link rel="stylesheet" href="{% static 'web/css/styles.css' %}">
+        <script src="{% static 'web/js/jquery.js' %}"></script>
+        <script src="{% static 'web/js/bootstrap.js' %}"></script>
+        <link rel="icon" type="image/png" href="{% static 'web/img/favicon.ico' %}">
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3 navbar-scrolled" id="mainNav">
+            <div class="container">
+                <a class="navbar-brand" href="#">Riotcat.org</a><button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav nav ml-auto my-2 my-lg-0" role="tablist" id="menu">
+                        <li class="nav-item"><a class="nav-link" id="services-tab" data-toggle="tab" href="#services" role="tab" aria-controls="services" aria-selected="false">Services</a></li>
+                        <li class="nav-item"><a class="nav-link" id="blog-tab" data-toggle="tab" href="#blog" role="tab" aria-controls="blog" aria-selected="false">Blog</a></li>
+                        <li class="nav-item"><a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane show active" role="tabpanel" aria-labelledby="services-tab" id="services">
+                <header class="masthead">
+                    <div class="container h-100">
+                        <div class="row align-items-center h-100 justify-content-center text-center">                    
+                            <div class="row">
+                                <div class="col-md-4 col-xs-3">
+                                    <img src="{% static 'web/img/logo.png' %}" alt="Logo" style="width: 90%; margin-bottom: 30px;">
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="row">
+                                        {% for service in service_list %}
+                                            <div class="col-md-6">
+                                                <button type="button" class="btn btn-primary btn-lg " data-toggle="modal" data-target="#modal-{{service.id}}" style="font-size: 40px; border-radius: 10px; width: 90%; margin-bottom: 25px; border: 2px white solid;">{{service.title}}</button>
+                                                <br />
+                                            </div>
+                                        {% endfor %}  
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+            </div>
+            <div class="tab-pane text-left" role="tabpanel" aria-labelledby="blog-tab" id="blog">
+                <section class="page-section">
+                    <div class="container">
+                        <h2>Blog</h2>                           
+                        <div class="row">
+                            <div class="col">
+                                {% for blogentry in blog_list %}
+                                <div style="border: solid #f7f7f9; padding: 5px; margin-bottom: 20px;">
+                                    <div class="media">
+                                        <i class="mr-3 fa fa-heart" aria-hidden="true" style="font-size: 48px; margin: 7px;"></i>
+                                        <div class="media-body">
+                                            <h5 class="mt-0">{{blogentry.title}}</h5>                                          
+                                            <p>{{blogentry.body|linebreaksbr|urlize}}</p>  
+                                            <p class="text-right">- {{blogentry.author}} {{blogentry.pub_date|date:"m.d.Y"}}</p>
+                                        </div>
+                                    </div>
+                                </div>                                
+                                {% endfor %}            
+                            </div>
+                        </div>
+                </section>
+            </div>  
+            <div class="tab-pane text-left" role="tabpanel" aria-labelledby="blog-tab" id="contact">
+                <section class="page-section">
+                    <div class="container">
+                        <h2>About</h2>
+                        <a href="/">Riotcat.org</a> is a hobby-based Project where we are trying to setup different opensource services and application for interacting with friends. Next to given projects we are trying to write own programs or plugins. Beside an overview of offered services (to a limited number of people, caused bylimited resources) there will be space for blog entries of current news or interesseting information about server, opensource and so on. <br />
+                        <br />
+                        <h2>Contact</h2>
+                        I'm happy about your feedback and open for any problems regarding the provided services.<br />
+                        <br />
+                        <table class="table table-striped">
+                            <thead>
+                                <th>Via</th>
+                                <th>Address</th>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Mail</td>
+                                    <td><a href="mailto:{{contact.email}}">{{contact.email}}</a> (<a href="#">PGP</a>)</td>
+                                </tr>
+                                <tr>
+                                    <td>Jabber</td>
+                                    <td><a href="xmpp://{{contact.xmpp}}">{{contact.xmpp}}</a></td>
+                                </tr>
+                                <tr>
+                                    <td>Matrix</td>
+                                    <td><a href="https://matrix.riotcat.org/#/{{contact.matrix}}" target="_blank">{{contact.matrix}}</a> or join <a href="https://matrix.riotcat.org/#/#support:matrix.riotcat.org" target="_blank" >#support:matrix.riotcat.org</a></td>                                    
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </div>
+        {% for service in service_list %}
+            <div class="modal fade" id="modal-{{service.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="modal-{{service.id}}">{{service.title}}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    <div class="modal-body">
+                    <p>{{service.description|safe|linebreaksbr}}</p>
+                    <div class="row">
+                        <div class="col-md-6">
+                            Registration is <span class="badge badge-{{ service.registration|yesno:"success,danger" }}">{{ service.registration|yesno:"open,closed" }}</span>
+                        </div>
+                        <div class="col-md-6">
+                            Service status: <span class="badge badge-{{ service.status|yesno:"success,danger" }}">{{ service.status|yesno:"running,stopped" }}</span>
+                        </div>
+                    </div>            
+                    <br />
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Portnumber</th>
+                                <th>Protocol</th>
+                            </tr>
+                        </thead>
+                        <tbody>                            
+                        {% for port in service.serviceport_set.all %}                        
+                            <tr>
+                                <td>{{port.number}}</td>
+                                <td>{{port.protocol}}</td>
+                            </tr>
+                        {% endfor %}
+                        <tr>
+                            <td>Login:</td>
+                            <td>{{service.login}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <hr>
+                    </div>
+                    <div class="modal-footer">
+                    <a href="{{service.link}}" target="_self"><button type="button" class="btn btn-primary">Open</button></a>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+                </div>
+            </div>
+        {% endfor %}
+    </body>
+    <script>
+        $(function () {           
+            // Javascript to enable link to tab
+            var url = document.location.toString();
+            if (url.match('#')) {                
+                $('#menu a[href="#' + url.split('#')[1] + '"]').tab('show');
+            } 
+            
+            // Change hash for page-reload
+            $('#menu').on('shown.bs.tab', function (e) {
+                window.location.hash = e.target.hash;
+            })
+        });
+    </script>
+</html>
