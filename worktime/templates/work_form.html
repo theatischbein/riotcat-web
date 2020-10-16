@@ -3,7 +3,7 @@
 {% if form.instance.id %}
 <form method="post" action="{% url 'worktime_edit' form.instance.id %}">
     {% else %}
-    <form method="post" action="{% url 'worktime_new' %}"></form>
+<form method="post" action="{% url 'worktime_new' %}">
     {% endif %}
     {% csrf_token %}
     <div class="modal fade" id="Modal-{{ form.instance.id }}" tabindex="-1" role="dialog" aria-labelledby="ModalLabel-{{ form.instance.id }}" aria-hidden="true">

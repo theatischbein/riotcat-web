@@ -25,7 +25,7 @@ SECRET_KEY = '@!bk!%1uz4*mkg=e+)w&6o)!b1v4w3=@fec8anbkyf(5nzye9q'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '[::1]']
 
 
 # Application definition
@@ -127,6 +127,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 STATIC_URL = '/static/'
 
 LOGIN_URL = '/admin/login/'
+SESSION_COOKIE_DOMAIN=".riotcat.org"
 
 try:
     from .development_settings import *
