@@ -7,7 +7,7 @@
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav nav ml-auto my-2 my-lg-0" role="tablist" id="menu">
                         <li class="nav-item"><a class="nav-link" id="services-tab" data-toggle="tab" href="#services" role="tab" aria-controls="services" aria-selected="false">Services</a></li>
-                        <li class="nav-item"><a class="nav-link" id="blog-tab" data-toggle="tab" href="#blog" role="tab" aria-controls="blog" aria-selected="false">Blog</a></li>
+                        <li class="nav-item"><a class="nav-link" id="blog-tab" data-toggle="tab" href="#blog" role="tab" aria-controls="blog" aria-selected="false">Blog <span class="badge badge-pill badge-dark">{{count_new_blogs}}</span></a></li>
                         <li class="nav-item"><a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Contact</a></li>
                     </ul>
                 </div>
@@ -17,7 +17,7 @@
             <div class="tab-pane show active" role="tabpanel" aria-labelledby="services-tab" id="services">
                 <section class="service">
                     <div class="container">
-                        <div class="row align-items-center justify-content-center text-center">                    
+                        <div class="row align-items-center justify-content-center text-center">
                             <div class="row">
                                 <div class="col-md-4">
                                     <img src="{% static 'web/img/logo.png' %}" alt="Logo" style="width: 90%; margin-bottom: 30px;">
@@ -29,7 +29,7 @@
                                                 <button type="button" class="btn btn-primary btn-lg " data-toggle="modal" data-target="#modal-{{service.id}}" style="font-size: 25px; border-radius: 10px; width: 90%; margin-bottom: 25px;">{{service.title}}</button>
                                                 <br />
                                             </div>
-                                        {% endfor %}  
+                                        {% endfor %}
                                     </div>
                                 </div>
                             </div>
@@ -40,7 +40,7 @@
             <div class="tab-pane text-left" role="tabpanel" aria-labelledby="blog-tab" id="blog">
                 <section class="page-section">
                     <div class="container">
-                        <h2>Blog</h2>                           
+                        <h2>Blog</h2>
                         <div class="row">
                             <div class="col">
                                 {% for blogentry in blog_list %}
@@ -48,17 +48,17 @@
                                     <div class="media">
                                         <i class="mr-3 fa fa-heart" aria-hidden="true" style="font-size: 48px; margin: 7px;"></i>
                                         <div class="media-body">
-                                            <h5 class="mt-0">{{blogentry.title}}</h5>                                          
-                                            <p>{{blogentry.body|linebreaksbr|urlize}}</p>  
-                                            <p class="text-right">- {{blogentry.author}} {{blogentry.pub_date|date:"m.d.Y"}}</p>
+                                            <h5 class="mt-0">{{blogentry.title}}</h5>
+                                            <p>{{blogentry.body|linebreaksbr|urlize}}</p>
+                                            <p class="text-right">- {{blogentry.author}} {{blogentry.pub_date|date:"d.m.Y"}}</p>
                                         </div>
                                     </div>
-                                </div>                                
-                                {% endfor %}            
+                                </div>
+                                {% endfor %}
                             </div>
                         </div>
                 </section>
-            </div>  
+            </div>
             <div class="tab-pane text-left" role="tabpanel" aria-labelledby="blog-tab" id="contact">
                 <section class="page-section">
                     <div class="container">
@@ -84,7 +84,7 @@
                                 </tr>
                                 <tr>
                                     <td>Matrix</td>
-                                    <td><a href="https://matrix.riotcat.org/#/{{contact.matrix}}" target="_blank">{{contact.matrix}}</a> or join <a href="https://matrix.riotcat.org/#/#support:matrix.riotcat.org" target="_blank" >#support:matrix.riotcat.org</a></td>                                    
+                                    <td><a href="https://matrix.riotcat.org/#/{{contact.matrix}}" target="_blank">{{contact.matrix}}</a> or join <a href="https://matrix.riotcat.org/#/#support:matrix.riotcat.org" target="_blank" >#support:matrix.riotcat.org</a></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -106,12 +106,12 @@
                     <p>{{service.description|safe|linebreaksbr}}</p>
                     <div class="row">
                         <div class="col-md-6">
-                            Registration is <span class="badge badge-{{ service.registration|yesno:"success,danger" }}">{{ service.registration|yesno:"open,closed" }}</span>
+                            Registration is <span class="badge badge-{{ service.registration|yesno:"success,danger" }}">{{ service.registration|yesno:"open,on request" }}</span>
                         </div>
                         <div class="col-md-6">
                             Service status: <span class="badge badge-{{ service.status|yesno:"success,danger" }}">{{ service.status|yesno:"running,stopped" }}</span>
                         </div>
-                    </div>            
+                    </div>
                     <br />
                     <table class="table table-striped">
                         <thead>
@@ -120,8 +120,8 @@
                                 <th>Protocol</th>
                             </tr>
                         </thead>
-                        <tbody>                            
-                        {% for port in service.serviceport_set.all %}                        
+                        <tbody>
+                        {% for port in service.serviceport_set.all %}
                             <tr>
                                 <td>{{port.number}}</td>
                                 <td>{{port.protocol}}</td>
@@ -144,13 +144,13 @@
             </div>
         {% endfor %}
     <script>
-        $(function () {           
+        $(function () {
             // Javascript to enable link to tab
             var url = document.location.toString();
-            if (url.match('#')) {                
+            if (url.match('#')) {
                 $('#menu a[href="#' + url.split('#')[1] + '"]').tab('show');
-            } 
-            
+            }
+
             // Change hash for page-reload
             $('#menu').on('shown.bs.tab', function (e) {
                 window.location.hash = e.target.hash;
