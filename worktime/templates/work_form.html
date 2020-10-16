@@ -1,0 +1,69 @@
+{% load crispy_forms_tags %}
+<!-- Modal -->
+{% if form.instance.id %}
+<form method="post" action="{% url 'worktime_edit' form.instance.id %}">
+    {% else %}
+    <form method="post" action="{% url 'worktime_new' %}"></form>
+    {% endif %}
+    {% csrf_token %}
+    <div class="modal fade" id="Modal-{{ form.instance.id }}" tabindex="-1" role="dialog" aria-labelledby="ModalLabel-{{ form.instance.id }}" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ModalLabel-{{ form.id }}">
+                        Neuer Arbeitszeitraum
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <strong>Fehler!</strong>
+                        {% for error in form.non_field_errors %}
+                          <p class="form-error">{{ error }}</p>
+                        {% endfor %}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                    {% endif %}
+                    <div class="form-row justify-content-md-center">
+                        <div class="form-group col-md-8 mb-0">
+                        {% for field in form %}
+                            {{ field|as_crispy_field }}
+                        {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
+                    <button type="submit" class="btn btn-primary">Speichern</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript">
+$(function(){
+    hideDateField($("#id_type").val());
+})
+function hideDateField(type){
+    if ({{ form.instance.id|default_if_none:-1 }} != -1){
+        return
+    }
+    if (type != "Arbeit"){
+        $("#div_id_dateFrom").show();
+        $("#div_id_dateTo").show();
+    }
+    else{
+        $("#div_id_dateFrom").hide();
+        $("#div_id_dateTo").hide();
+    }
+}
+$("#id_type").on('change', function(){
+    hideDateField(this.value);
+});
+</script>

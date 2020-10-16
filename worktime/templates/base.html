@@ -1,0 +1,76 @@
+{% load static %}
+<html>
+    <head>
+        <title>Arbeitszeiten</title>
+        <link rel="stylesheet" href="{% static 'web/css/bootstrap/bootstrap.css' %}">
+        <link rel="stylesheet" href="{% static 'web/css/fontawesome/all.css' %}">
+        <link rel="stylesheet" href="{% static 'web/css/styles.css' %}">
+        <script src="{% static 'web/js/jquery.js' %}"></script>
+        <script src="{% static 'web/js/bootstrap.js' %}"></script>
+        <script src="{% static 'web/js/Chart.min.js' %}"></script>
+        <link rel="icon" type="image/png" href="{% static 'web/img/favicon.ico' %}">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="navbar-brand">
+                <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <a href='{% url "worktime_index" %}'>
+                    <img src="{% static 'web/img/logo.png' %}" width="50px" alt="Logo" style="margin-right: 10px;">
+                </a>
+            </div>
+            <div class="navbar-collapse collapse" id="navbar">
+                <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                    <li class="nav-item active">
+                        <a class="nav-link" href='{% url "worktime_index" %}'>Übersicht <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href='#' class="nav-link" type="new" id="None" data-toggle="modal" data-target="#Modal-">Neu</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Kategorien</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div class="container pt-5">
+                {% block content %}
+                {% endblock %}
+        </div>
+        <script text="text/javascript">
+        $(function(){
+            // load modal content
+            $('[data-toggle="modal"]').on('click', function(e) {
+                var id = this.id;
+                var type = $(this).attr("type");
+                if (id){
+                    if (type == "edit"){
+                        var url = "/worktime/" + type + "/" + id;
+                    }
+                    else {
+                        var url = "/worktime/" + type;
+                    }
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                        dataType: "html",
+                        // on success
+                        success: function (data) {
+                            $("#modalContainer").html(data);
+                            $("#Modal-"+id).modal('show');
+                        },
+                        // on error
+                        error: function (response) {
+                            // alert the error if any error occured
+                            console.log(response.responseJSON.errors)
+                            alert("Es ist ein Fehler aufgetreten.");
+                        }
+                    });
+                }
+            });
+        });
+        </script>
+    </body>
+</html>
