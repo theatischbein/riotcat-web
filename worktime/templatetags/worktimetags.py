@@ -30,4 +30,4 @@ def getMonthTotal(value):
 
 @register.filter(name="secondsToDays")
 def secondsToDays(value):
-    return int(value / 60 / 60 / 24 / (40/30.5))+1
+    return int(value / 60 / 60 / (40/30.5))+1

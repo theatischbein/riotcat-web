@@ -19,6 +19,14 @@ class WorkCreateForm(forms.ModelForm):
         if models.Work.objects.filter(type=models.Types.WORK).filter(dateTo__isnull=True).all() and cleaned_data["type"] == models.Types.WORK:
             raise ValidationError("Es existiert noch ein nicht abgeschlossener Arbeitszeitraum!")
 
+    def save(self, commit=True):
+        work = super(WorkCreateForm, self).save(commit=False)
+        work.duration = work.calculateDuration()
+
+        if commit:
+            work.save()
+        return work
+
 
 class WorkUpdateForm(forms.ModelForm):
     class Meta:
@@ -27,7 +35,6 @@ class WorkUpdateForm(forms.ModelForm):
 
     def save(self, commit=True):
         work = super(WorkUpdateForm, self).save(commit=False)
-        print(work.dateTo)
         work.duration = work.calculateDuration()
 
         if commit:

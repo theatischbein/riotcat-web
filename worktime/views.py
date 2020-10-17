@@ -23,7 +23,7 @@ class WorkView(ListView):
         works = models.Work.objects.exclude(type=models.Types.HOLIDAY).all()
 
         work_sum = models.Work.objects.exclude(type=models.Types.HOLIDAY).annotate(month=TruncMonth('dateFrom')).values('month').annotate(duration_sum=Sum('duration')/60/60).order_by('-month')[:6]
-        holiday_sum = models.Work.objects.filter(type=models.Types.HOLIDAY).filter(dateFrom__year=timezone.now().year).aggregate(holiday_sum=((Sum('duration')) / Value(60*60*24*(40/30.5))+1))['holiday_sum'] or 0
+        holiday_sum = models.Work.objects.filter(type=models.Types.HOLIDAY).filter(dateFrom__year=timezone.now().year).aggregate(holiday_sum=((Sum('duration')) / Value(60*60*(40/30.5))+1))['holiday_sum'] or 0
         holiday_total = 31
 
         context = super().get_context_data(**kwargs)

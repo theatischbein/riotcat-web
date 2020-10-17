@@ -27,8 +27,7 @@ class Work(models.Model):
     def calculateDuration(self):
         if self.dateTo:
             if self.type != Types.WORK:
-                print((self.dateTo - self.dateFrom).days)
-                return int(((self.dateTo - self.dateFrom).days + 1)* (40/30.5)) *24 * 60 * 60
+                return int(((self.dateTo - self.dateFrom).days + 1)* (40/30.5)) * 60 * 60
             else:
                 return int((self.dateTo - self.dateFrom).total_seconds())
         return 0

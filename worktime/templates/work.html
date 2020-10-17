@@ -49,7 +49,7 @@
                                             <td>{{ day.dateTo|date:"d.m.y" }}</td>
                                             <td>{{ day.duration|secondsToDays }}</td>
                                             <td>
-                                                <a href='{% url "worktime_edit" day.id %}'><i class="fa fa-edit"></i></a>
+                                                <a href='#' type="edit" id="{{ day.id }}" data-toggle="modal" data-target="#Modal-"><i class="fa fa-edit"></i></a>
                                             </td>
                                             <td>
                                                 <a href='{% url "worktime_delete" day.id %}'><i class="fa fa-trash"></i></a>
