@@ -16,8 +16,11 @@ class WorkView(ListView):
     model = models.Work
 
     @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(WorkView, self).dispatch(*args, **kwargs)
+    def dispatch(self, request, *args, **kwargs):
+        self.form = request.session.get('form', "")
+        if self.form:
+            del request.session['form']
+        return super(WorkView, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         works = models.Work.objects.exclude(type=models.Types.HOLIDAY).all()
@@ -37,7 +40,7 @@ class WorkView(ListView):
             'work': {'data': [w["duration_sum"] for w in work_sum], 'label': [l["month"].strftime("%B %Y") for l in work_sum]}
         }
         context['holidays'] =  models.Work.objects.filter(type=models.Types.HOLIDAY).all()
-        context['test'] = type(timezone.now())
+        context['form'] = self.form
         return context
 
 
@@ -48,8 +51,14 @@ class WorkCreateView(CreateView):
     success_url = "/worktime"
 
     @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(WorkCreateView, self).dispatch(*args, **kwargs)
+    def dispatch(self, request, *args, **kwargs):
+        if request.method == "POST":
+            request.session['form'] = self.get_form(form_class=self.get_form_class()).non_field_errors()
+        return super(WorkCreateView, self).dispatch(request, *args, **kwargs)
+
+    def form_invalid(self, form):
+        super(WorkCreateView, self).form_invalid(form)
+        return redirect('worktime_index')
 
 class WorkUpdateView(UpdateView):
     model = models.Work

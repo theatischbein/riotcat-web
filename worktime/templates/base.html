@@ -40,35 +40,38 @@
                 {% endblock %}
         </div>
         <script text="text/javascript">
+        function loadModalContent(elem){
+            var id = elem.id;
+            var type = $(elem).attr("type");
+            if (id){
+                if (type == "edit"){
+                    var url = "/worktime/" + type + "/" + id;
+                }
+                else {
+                    var url = "/worktime/" + type;
+                }
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    dataType: "html",
+                    // on success
+                    success: function (data) {
+                        $("#modalContainer").html(data);
+                        $("#Modal-"+id).modal('show');
+                    },
+                    // on error
+                    error: function (response) {
+                        // alert the error if any error occured
+                        console.log(response.responseJSON.errors)
+                        alert("Es ist ein Fehler aufgetreten.");
+                    }
+                });
+            }
+        }
         $(function(){
             // load modal content
-            $('[data-toggle="modal"]').on('click', function(e) {
-                var id = this.id;
-                var type = $(this).attr("type");
-                if (id){
-                    if (type == "edit"){
-                        var url = "/worktime/" + type + "/" + id;
-                    }
-                    else {
-                        var url = "/worktime/" + type;
-                    }
-                    $.ajax({
-                        url: url,
-                        type: 'GET',
-                        dataType: "html",
-                        // on success
-                        success: function (data) {
-                            $("#modalContainer").html(data);
-                            $("#Modal-"+id).modal('show');
-                        },
-                        // on error
-                        error: function (response) {
-                            // alert the error if any error occured
-                            console.log(response.responseJSON.errors)
-                            alert("Es ist ein Fehler aufgetreten.");
-                        }
-                    });
-                }
+            $('[data-toggle="modal"]').on('click', function(){
+                loadModalContent(this);
             });
         });
         </script>

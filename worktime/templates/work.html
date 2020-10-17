@@ -4,6 +4,19 @@
 {% block content %}
 {% csrf_token %}
 {% regroup works by dateFrom|date:"F Y" as workday_month %}
+
+{% if form %}
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <strong>Fehler!</strong>
+    {% for error in form %}
+        <p class="form-error">{{ error }}</p>
+    {% endfor %}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    </div>
+{% endif %}
+
 {% if current %}
 <div id="currentDateFrom" style="display:none">{{ current.dateFrom|date:"Y-m-d" }}T{{ current.dateFrom|time:"H:i:s" }}</div>
 <div class="alert alert-info alert-dismissible fade show" role="alert">
