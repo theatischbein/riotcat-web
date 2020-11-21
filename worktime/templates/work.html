@@ -60,7 +60,7 @@
                                         <tr>
                                             <td>{{ day.dateFrom|date:"d.m.y" }}</td>
                                             <td>{{ day.dateTo|date:"d.m.y" }}</td>
-                                            <td>{{ day.duration|secondsToDays }}</td>
+                                            <td>{{ day.duration|secondsToDays:True }}</td>
                                             <td>
                                                 <a href='#' type="edit" id="{{ day.id }}" data-toggle="modal" data-target="#Modal-"><i class="fa fa-edit"></i></a>
                                             </td>

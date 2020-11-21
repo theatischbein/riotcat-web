@@ -29,5 +29,8 @@ def getMonthTotal(value):
     return "%sh %sm" %(int(sum / 60 / 60), int(sum % 60))
 
 @register.filter(name="secondsToDays")
-def secondsToDays(value):
-    return int(value / 60 / 60 / (40/30.5))+1
+def secondsToDays(value, holiday=False):
+    if holiday:
+        return int(value / 60 / 60)
+    else:
+        return int(value / 60 / 60 / (40/30.5))+1

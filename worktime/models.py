@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils import timezone
-
+import datetime
 
 class Types(models.TextChoices):
     WORK="Arbeit"
@@ -26,7 +26,10 @@ class Work(models.Model):
 
     def calculateDuration(self):
         if self.dateTo:
-            if self.type != Types.WORK:
+            if self.type == Types.HOLIDAY:
+                daygenerator = [self.dateFrom + datetime.timedelta(x) for x in range((self.dateTo - self.dateFrom).days + 1) if (self.dateFrom + datetime.timedelta(x)).weekday() <5]
+                return sum(1 for x in daygenerator) * 60 * 60
+            elif self.type != Types.WORK:
                 return int(((self.dateTo - self.dateFrom).days + 1)* (40/30.5)) * 60 * 60
             else:
                 return int((self.dateTo - self.dateFrom).total_seconds())
