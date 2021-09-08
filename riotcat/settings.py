@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+import ldap
+from django_auth_ldap.config import LDAPSearch, GroupOfNamesType
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -38,9 +40,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'crispy_forms',
+    'ckeditor_uploader',
+    'ckeditor',
     'web',
     'worktime',
 ]
+
+CKEDITOR_BASEPATH = "/static/ckeditor/ckeditor/"
+CKEDITOR_UPLOAD_PATH = "uploads/"
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
@@ -53,6 +60,38 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+AUTHENTICATION_BACKENDS = [
+    "django_auth_ldap.backend.LDAPBackend",
+    "django.contrib.auth.backends.ModelBackend",
+]
+
+AUTH_LDAP_SERVER_URI = "ldap://ldap"
+AUTH_LDAP_BIND_DN = "uid=django,ou=people,ou=Anwendung,dc=riotcat,dc=org"
+AUTH_LDAP_BIND_PASSWORD = ""
+AUTH_LDAP_USER_SEARCH = LDAPSearch(
+    "ou=people,dc=riotcat,dc=org", ldap.SCOPE_SUBTREE, "(&(uid=%(user)s)(memberof=cn=django,ou=groups,dc=django,dc=riotcat,dc=org))"
+)
+AUTH_LDAP_GROUP_SEARCH = LDAPSearch(
+    "ou=django,ou=groups,dc=riotcat,dc=org",
+    ldap.SCOPE_SUBTREE,
+    "(objectClass=groupOfNames)",
+)
+AUTH_LDAP_GROUP_TYPE = GroupOfNamesType(name_attr="cn")
+AUTH_LDAP_REQUIRE_GROUP = "cn=django,ou=groups,dc=django,dc=riotcat,dc=org"
+AUTH_LDAP_DENY_GROUP = "cn=disabled,ou=groups,dc=django,dc=riotcat,dc=org"
+AUTH_LDAP_USER_ATTR_MAP = {
+    "first_name": "givenName",
+    "last_name": "sn",
+    "email": "mail",
+}
+AUTH_LDAP_USER_FLAGS_BY_GROUP = {
+    "is_active": "cn=django,ou=groups,dc=django,dc=riotcat,dc=org",
+    "is_staff": " cn=staff,ou=groups,dc=django,dc=riotcat,dc=org",
+    "is_superuser": " cn=admin,ou=groups,dc=django,dc=riotcat,dc=org",
+}
+AUTH_LDAP_ALWAYS_UPDATE_USER = True
+AUTH_LDAP_FIND_GROUP_PERMS = True
 
 ROOT_URLCONF = 'riotcat.urls'
 
@@ -131,5 +170,10 @@ SESSION_COOKIE_DOMAIN=".riotcat.org"
 
 try:
     from .development_settings import *
+except ImportError:
+    pass
+
+try:
+    from .production_settings import *
 except ImportError:
     pass

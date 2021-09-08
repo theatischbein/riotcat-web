@@ -1,9 +1,9 @@
 {% load crispy_forms_tags %}
 <!-- Modal -->
 {% if form.instance.id %}
-<form method="post" action="{% url 'worktime_edit' form.instance.id %}">
+<form method="post" action="{% url 'category_edit' form.instance.id %}">
     {% else %}
-<form method="post" action="{% url 'worktime_new' %}">
+<form method="post" action="{% url 'category_new' %}">
     {% endif %}
     {% csrf_token %}
     <div class="modal fade" id="Modal-{{ form.instance.id }}" tabindex="-1" role="dialog" aria-labelledby="ModalLabel-{{ form.instance.id }}" aria-hidden="true">
@@ -12,9 +12,9 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="ModalLabel-{{ form.id }}">
                         {% if form.instance.id %}
-                            Arbeitszeitraum bearbeiten
+                            Kategorie bearbeiten
                         {% else %}
-                            Neuer Arbeitszeitraum
+                            Neue Kategorie
                         {% endif %}
                     </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -49,25 +49,3 @@
         </div>
     </div>
 </form>
-
-<script type="text/javascript">
-$(function(){
-    hideDateField($("#id_type").val());
-})
-function hideDateField(type){
-    if ({{ form.instance.id|default_if_none:-1 }} != -1){
-        return
-    }
-    if (type != "Arbeit"){
-        $("#div_id_dateFrom").show();
-        $("#div_id_dateTo").show();
-    }
-    else{
-        $("#div_id_dateFrom").hide();
-        $("#div_id_dateTo").hide();
-    }
-}
-$("#id_type").on('change', function(){
-    hideDateField(this.value);
-});
-</script>

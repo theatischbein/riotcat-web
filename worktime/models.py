@@ -22,7 +22,7 @@ class Work(models.Model):
     duration = models.IntegerField(null=True, blank=True, verbose_name="Dauer", default=0)
 
     def __str__(self):
-        return "%s (%s, Dauer: %s)" %(self.dateFrom.strftime("%d.%m.%y"), self.type, self.duration)
+        return "%s (%s, Dauer: %s)" %(self.dateFrom.strftime("%d.%m.%y"), self.category, str(datetime.timedelta(seconds=self.duration)))
 
     def calculateDuration(self):
         if self.dateTo:

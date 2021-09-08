@@ -2,6 +2,8 @@ from django.core.exceptions import ValidationError
 from django.db.models import Q
 from django import forms
 import datetime
+
+from django.forms.models import ModelForm
 from . import models
 
 class WorkCreateForm(forms.ModelForm):
@@ -41,3 +43,8 @@ class WorkUpdateForm(forms.ModelForm):
             work.save()
         return work
 
+
+class CategoryForm(forms.ModelForm):
+    class Meta:
+        model = models.Category
+        fields = ['name']

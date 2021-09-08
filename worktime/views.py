@@ -8,6 +8,7 @@ from django.db.models.functions import TruncMonth, TruncDate, ExtractMonth
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from django.urls import reverse_lazy
 import datetime
 from . import models, forms
 
@@ -18,15 +19,31 @@ class WorkView(ListView):
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         self.form = request.session.get('form', "")
+
         if self.form:
             del request.session['form']
+
+        category_id = request.session.get('category', "")
+        if not category_id:
+            self.category = models.Category.objects.first()
+            request.session['category'] = self.category.id
+        else:
+            self.category = models.Category.objects.get(id=category_id)
+
+        self.show_more = int(request.GET.get('more', "1"))
+
         return super(WorkView, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        works = models.Work.objects.exclude(type=models.Types.HOLIDAY).all()
+        last_work = models.Work.objects.first()
+        works = models.Work.objects.filter(category=self.category).exclude(type=models.Types.HOLIDAY)
+        if last_work:
+            ## GET parameter ?more is a multiple of 3 month
+            offset = last_work.dateFrom-datetime.timedelta(days=31*3*self.show_more)
+            works = works.filter(dateFrom__gte=offset)
 
-        work_sum = models.Work.objects.exclude(type=models.Types.HOLIDAY).annotate(month=TruncMonth('dateFrom')).values('month').annotate(duration_sum=Sum('duration')/60/60).order_by('-month')[:6]
-        holiday_sum = models.Work.objects.filter(type=models.Types.HOLIDAY).filter(dateFrom__year=timezone.now().year).aggregate(holiday_sum=((Sum('duration')) / Value(60*60)))['holiday_sum'] or 0
+        work_sum = models.Work.objects.filter(category=self.category).exclude(type=models.Types.HOLIDAY).annotate(month=TruncMonth('dateFrom')).values('month').annotate(duration_sum=Sum('duration')/60/60).order_by('-month')[:6]
+        holiday_sum = models.Work.objects.filter(category=self.category).filter(type=models.Types.HOLIDAY).filter(dateFrom__year=timezone.now().year).aggregate(holiday_sum=((Sum('duration')) / Value(60*60)))['holiday_sum'] or 0
         holiday_total = 30
 
         context = super().get_context_data(**kwargs)
@@ -34,13 +51,16 @@ class WorkView(ListView):
         #context['modals'] = self.modal_add
         #context['notify'] = self.notify
         context['works'] = works
-        context['current'] = models.Work.objects.filter(type=models.Types.WORK).filter(dateTo__isnull=True).first()
+        context['current'] = models.Work.objects.filter(category=self.category).filter(type=models.Types.WORK).filter(dateTo__isnull=True).first()
         context['graphData'] = {
             'holiday': {'data': [holiday_sum, holiday_total-holiday_sum], 'label': ['genommen', 'verbleibend']},
             'work': {'data': [w["duration_sum"] for w in work_sum], 'label': [l["month"].strftime("%B %Y") for l in work_sum]}
         }
-        context['holidays'] =  models.Work.objects.filter(type=models.Types.HOLIDAY).all()
+        context['holidays'] =  models.Work.objects.filter(category=self.category).filter(type=models.Types.HOLIDAY).all()
+        context['categories'] = models.Category.objects.all()
+        context['current_category'] = self.category
         context['form'] = self.form
+        context['more'] = self.show_more + 1
         return context
 
 
@@ -68,18 +88,17 @@ class WorkUpdateView(UpdateView):
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
+        print(kwargs)
         return super(WorkUpdateView, self).dispatch(*args, **kwargs)
 
-@login_required
-def deleteWork(reqeust, id):
-    if reqeust.method == "GET":
-        if id:
-            try:
-                work = models.Work.objects.get(id=id).delete()
-            except ObjectDoesNotExist:
-                print("ObjectDoesNotExist")
-    return redirect('worktime_index')
+class WorkDeleteView(DeleteView):
+    model = models.Work
+    template_name = "confirm_delete.html"
+    success_url = reverse_lazy('worktime_index')
 
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(WorkDeleteView, self).dispatch(*args, **kwargs)
 
 @login_required
 def WorkEnd(request, id):
@@ -94,6 +113,63 @@ def WorkEnd(request, id):
         work.save()
 
     return redirect('worktime_index')
+
+@login_required
+def change_category(request, id):
+    request.session['category'] = id
+    return redirect('worktime_index')
+
+class CategoryView(ListView):
+    template_name = 'category.html'
+    model = models.Category
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        self.form = request.session.get('form', "")
+        if self.form:
+            del request.session['form']
+        return super(CategoryView, self).dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user'] = self.request.user
+        context['form'] = self.form
+        return context
+
+class CategoryCreateView(CreateView):
+    model = models.Work
+    template_name = "category_form.html"
+    form_class = forms.CategoryForm
+    success_url = "/worktime/category"
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        if request.method == "POST":
+            request.session['form'] = self.get_form(form_class=self.get_form_class()).non_field_errors()
+        return super(CategoryCreateView, self).dispatch(request, *args, **kwargs)
+
+    def form_invalid(self, form):
+        super(CategoryCreateView, self).form_invalid(form)
+        return redirect('category_index')
+
+class CategoryUpdateView(UpdateView):
+    model = models.Category
+    template_name = "category_form.html"
+    form_class = forms.CategoryForm
+    success_url = "/worktime/category"
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(CategoryUpdateView, self).dispatch(*args, **kwargs)
+
+class CategoryDeleteView(DeleteView):
+    model = models.Category
+    template_name = "confirm_delete.html"
+    success_url = reverse_lazy('category_index')
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(WorkDeleteView, self).dispatch(*args, **kwargs)
 
 def install(request):
     pass

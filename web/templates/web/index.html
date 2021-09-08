@@ -7,7 +7,7 @@
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav nav ml-auto my-2 my-lg-0" role="tablist" id="menu">
                         <li class="nav-item"><a class="nav-link" id="services-tab" data-toggle="tab" href="#services" role="tab" aria-controls="services" aria-selected="false">Services</a></li>
-                        <li class="nav-item"><a class="nav-link" id="blog-tab" data-toggle="tab" href="#blog" role="tab" aria-controls="blog" aria-selected="false">Blog <span class="badge badge-pill badge-dark">{{count_new_blogs}}</span></a></li>
+                        <li class="nav-item"><a class="nav-link" id="blog-tab" data-toggle="tab" href="#blog" role="tab" aria-controls="blog" aria-selected="false">Blog <span class="badge badge-pill badge-dark">{{ count_new_blogs }}</span></a></li>
                         <li class="nav-item"><a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Contact</a></li>
                     </ul>
                 </div>
@@ -26,7 +26,7 @@
                                     <div class="row">
                                         {% for service in service_list %}
                                             <div class="col-md-6">
-                                                <button type="button" class="btn btn-primary btn-lg " data-toggle="modal" data-target="#modal-{{service.id}}" style="font-size: 25px; border-radius: 10px; width: 90%; margin-bottom: 25px;">{{service.title}}</button>
+                                                <button type="button" class="btn btn-primary btn-lg " data-toggle="modal" data-target="#modal-{{ service.id }}" style="font-size: 25px; border-radius: 10px; width: 90%; margin-bottom: 25px;">{{ service.title }}</button>
                                                 <br />
                                             </div>
                                         {% endfor %}
@@ -48,9 +48,9 @@
                                     <div class="media">
                                         <i class="mr-3 fa fa-heart" aria-hidden="true" style="font-size: 48px; margin: 7px;"></i>
                                         <div class="media-body">
-                                            <h5 class="mt-0">{{blogentry.title}}</h5>
-                                            <p>{{blogentry.body|linebreaksbr|urlize}}</p>
-                                            <p class="text-right">- {{blogentry.author}} {{blogentry.pub_date|date:"d.m.Y"}}</p>
+                                            <h5 class="mt-0">{{ blogentry.title }}</h5>
+                                            <p>{{ blogentry.body|safe }}</p> <!--|safe|linebreaksbr|urlize-->
+                                            <p class="text-right">- {{ blogentry.author }} {{ blogentry.pub_date|date:"d.m.Y" }}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -76,15 +76,15 @@
                             <tbody>
                                 <tr>
                                     <td>Mail</td>
-                                    <td><a href="mailto:{{contact.email}}">{{contact.email}}</a> (<a href="#">PGP</a>)</td>
+                                    <td><a href="mailto:{{ contact.email }}">{{ contact.email }}</a> (<a href="#">PGP</a>)</td>
                                 </tr>
                                 <tr>
                                     <td>Jabber</td>
-                                    <td><a href="xmpp://{{contact.xmpp}}">{{contact.xmpp}}</a></td>
+                                    <td><a href="xmpp://{{ contact.xmpp }}">{{ contact.xmpp }}</a></td>
                                 </tr>
                                 <tr>
                                     <td>Matrix</td>
-                                    <td><a href="https://matrix.riotcat.org/#/{{contact.matrix}}" target="_blank">{{contact.matrix}}</a> or join <a href="https://matrix.riotcat.org/#/#support:matrix.riotcat.org" target="_blank" >#support:matrix.riotcat.org</a></td>
+                                    <td><a href="https://matrix.riotcat.org/#/{{ contact.matrix }}" target="_blank">{{ contact.matrix }}</a> or join <a href="https://matrix.riotcat.org/#/#support:matrix.riotcat.org" target="_blank" >#support:matrix.riotcat.org</a></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -93,23 +93,23 @@
             </div>
         </div>
         {% for service in service_list %}
-            <div class="modal fade" id="modal-{{service.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal fade" id="modal-{{ service.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                    <h5 class="modal-title" id="modal-{{service.id}}">{{service.title}}</h5>
+                    <h5 class="modal-title" id="modal-{{ service.id }}">{{ service.title }}</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                     </div>
                     <div class="modal-body">
-                    <p>{{service.description|safe|linebreaksbr}}</p>
+                    <p>{{ service.description|safe|linebreaksbr }}</p>
                     <div class="row">
                         <div class="col-md-6">
-                            Registration is <span class="badge badge-{{ service.registration|yesno:"success,danger" }}">{{ service.registration|yesno:"open,on request" }}</span>
+                            Registration is <span class="badge badge-{{  service.registration|yesno:"success,danger"  }}">{{  service.registration|yesno:"open,on request"  }}</span>
                         </div>
                         <div class="col-md-6">
-                            Service status: <span class="badge badge-{{ service.status|yesno:"success,danger" }}">{{ service.status|yesno:"running,stopped" }}</span>
+                            Service status: <span class="badge badge-{{  service.status|yesno:"success,danger"  }}">{{  service.status|yesno:"running,stopped"  }}</span>
                         </div>
                     </div>
                     <br />
@@ -123,20 +123,20 @@
                         <tbody>
                         {% for port in service.serviceport_set.all %}
                             <tr>
-                                <td>{{port.number}}</td>
-                                <td>{{port.protocol}}</td>
+                                <td>{{ port.number }}</td>
+                                <td>{{ port.protocol }}</td>
                             </tr>
                         {% endfor %}
                         <tr>
                             <td>Login:</td>
-                            <td>{{service.login}}</td>
+                            <td>{{ service.login }}</td>
                         </tr>
                         </tbody>
                     </table>
                     <hr>
                     </div>
                     <div class="modal-footer">
-                    <a href="{{service.link}}" target="_self"><button type="button" class="btn btn-primary">Open</button></a>
+                    <a href="{{ service.link }}" target="_self"><button type="button" class="btn btn-primary">Open</button></a>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
                 </div>

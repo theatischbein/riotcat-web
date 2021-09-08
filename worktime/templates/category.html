@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load worktimetags %}
+
+{% block content %}
+{% csrf_token %}
+{% regroup works by dateFrom|date:"F Y" as workday_month %}
+
+{% if form %}
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <strong>Fehler!</strong>
+    {% for error in form %}
+        <p class="form-error">{{ error }}</p>
+    {% endfor %}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    </div>
+{% endif %}
+
+<a href='#' class="btn btn-primary" type="category/new" id="None" data-toggle="modal" data-target="#Modal-">Neue Kategorie</a><br />
+<br />
+
+<div class="card mb-3">
+    <div class="card-header">
+        Kategorien
+    </div>
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <th>Name</th>
+                <th colspan="2"></th>
+            </thead>
+            <tbody>
+                {% for category in object_list %}
+                    <tr>
+                        <td>{{ category.name }}</td>
+                        <td>
+                            <a href='#' type="category/edit" id="{{ category.id }}" data-toggle="modal" data-target="#Modal-"><i class="fa fa-edit"></i></a>
+                        </td>
+                        <td>
+                            <a href='{% url "category_delete" category.id %}'><i class="fa fa-trash"></i></a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

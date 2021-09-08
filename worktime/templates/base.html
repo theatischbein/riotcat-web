@@ -23,14 +23,14 @@
             </div>
             <div class="navbar-collapse collapse" id="navbar">
                 <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                    <li class="nav-item active">
-                        <a class="nav-link" href='{% url "worktime_index" %}'>Übersicht <span class="sr-only">(current)</span></a>
+                    <li class="nav-item {% if request.resolver_match.url_name|first in 'worktime' %}active{% endif %}">
+                        <a class="nav-link" href='{% url "worktime_index" %}'>Arbeitszeiten {% if request.resolver_match.url_name|first in 'worktime' %}<span class="sr-only">(current)</span>{% endif %}</a>
+                    </li>
+                    <li class="nav-item {% if request.resolver_match.url_name|first in 'category' %}active{% endif %}">
+                        <a class="nav-link" href='{% url "category_index" %}'>Kategorien {% if request.resolver_match.url_name|first in 'category' %}<span class="sr-only">(current)</span>{% endif %}</a>
                     </li>
                     <li class="nav-item">
-                        <a href='#' class="nav-link" type="new" id="None" data-toggle="modal" data-target="#Modal-">Neu</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Kategorien</a>
+                        <a class="nav-link" href="/admin">Admin</a>
                     </li>
                 </ul>
             </div>
@@ -39,12 +39,18 @@
                 {% block content %}
                 {% endblock %}
         </div>
+
+        <!-- Modals -->
+        <div id="modalContainer">
+
+        </div>
+
         <script text="text/javascript">
         function loadModalContent(elem){
             var id = elem.id;
             var type = $(elem).attr("type");
             if (id){
-                if (type == "edit"){
+                if (type.includes("edit")){
                     var url = "/worktime/" + type + "/" + id;
                 }
                 else {
@@ -62,7 +68,7 @@
                     // on error
                     error: function (response) {
                         // alert the error if any error occured
-                        console.log(response.responseJSON.errors)
+                        console.log(response.errors)
                         alert("Es ist ein Fehler aufgetreten.");
                     }
                 });
