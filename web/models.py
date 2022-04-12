@@ -39,3 +39,9 @@ class Blogentry(models.Model):
 
     def __str__(self):
         return "%s - %s (%s)" %(self.title, self.author, self.pub_date.strftime("%d.%m.%Y"))
+
+class FlatViewing(models.Model):
+    date = models.DateTimeField()
+    confirmed = models.BooleanField()
+    acknowledged = models.BooleanField()
+    canceled = models.BooleanField()

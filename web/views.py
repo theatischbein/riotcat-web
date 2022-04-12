@@ -4,7 +4,7 @@ from django.template import loader
 from datetime import datetime, timedelta
 
 
-from .models import Service, ServicePort, Blogentry, Author
+from .models import Service, ServicePort, Blogentry, Author, FlatViewing
 
 # Create your views here.
 def index(request):
@@ -18,5 +18,22 @@ def index(request):
         'blog_list': blog_list,
         'contact': contact,
         'count_new_blogs': new_blogs,
+    }
+    return HttpResponse(template.render(context, request))
+
+def flatviewing(request):
+    dates = FlatViewing.objects.all()
+    dates_confirmed = FlatViewing.objects.filter(confirmed=True).exclude(acknowledged=True)
+    dates_acknowledged = FlatViewing.objects.filter(acknowledged=True)
+    dates_confirmed_canceled = dates_confirmed.filter(canceled=True)
+    dates_acknowledged_canceled = dates_acknowledged.filter(canceled=True)
+
+    template = loader.get_template('web/flatviewing.html')
+    context = {
+        'dates': dates,
+        'dates_confirmed': dates_confirmed,
+        'dates_acknowledged': dates_acknowledged,
+        'dates_confirmed_canceled': dates_confirmed_canceled,
+        'dates_acknowledged_canceled': dates_acknowledged_canceled,
     }
     return HttpResponse(template.render(context, request))

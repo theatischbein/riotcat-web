@@ -3,7 +3,7 @@ from django.contrib.contenttypes.admin import GenericTabularInline
 from . import forms
 
 # Register your models here.
-from .models import Service, ServicePort, Author, Blogentry
+from .models import Service, ServicePort, Author, Blogentry, FlatViewing
 
 class ServicePortInline(admin.TabularInline):
     model = ServicePort
@@ -18,3 +18,4 @@ class BlogentryAdmin(admin.ModelAdmin):
 admin.site.register(Service, ServiceAdmin)
 admin.site.register(Blogentry, BlogentryAdmin)
 admin.site.register(Author)
+admin.site.register(FlatViewing)
