@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader
 from datetime import datetime, timedelta
+from django.db.models import Q
 
 
 from .models import Service, ServicePort, Blogentry, Author, FlatViewing
@@ -23,17 +24,13 @@ def index(request):
 
 def flatviewing(request):
     dates = FlatViewing.objects.all()
-    dates_confirmed = FlatViewing.objects.filter(confirmed=True).exclude(acknowledged=True)
-    dates_acknowledged = FlatViewing.objects.filter(acknowledged=True)
-    dates_confirmed_canceled = dates_confirmed.filter(canceled=True)
-    dates_acknowledged_canceled = dates_acknowledged.filter(canceled=True)
+    dates_conf_or_ack = FlatViewing.objects.filter(canceled=False)
+    dates_canceled = FlatViewing.objects.filter(canceled=True)
 
     template = loader.get_template('web/flatviewing.html')
     context = {
         'dates': dates,
-        'dates_confirmed': dates_confirmed,
-        'dates_acknowledged': dates_acknowledged,
-        'dates_confirmed_canceled': dates_confirmed_canceled,
-        'dates_acknowledged_canceled': dates_acknowledged_canceled,
+        'dates_conf_or_ack': dates_conf_or_ack,
+        'dates_canceled': dates_canceled,
     }
     return HttpResponse(template.render(context, request))
