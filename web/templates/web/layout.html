@@ -9,9 +9,18 @@
         <script src="{% static 'web/js/bootstrap.js' %}"></script>
         <link rel="icon" type="image/png" href="{% static 'web/img/favicon.ico' %}">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta property="og:title" content="Riotcat.org">
+        <meta name="twitter:title" content="Riotcat.org">
+
+        <meta name="description" content="Riotcat.org is a hobby-based Project where we are trying to setup different opensource services and application for interacting with friends.">
+        <meta property="og:description" content="Riotcat.org is a hobby-based Project where we are trying to setup different opensource services and application for interacting with friends.">
+        <meta name="twitter:description" content="Riotcat.org is a hobby-based Project where we are trying to setup different opensource services and application for interacting with friends.">
+
+        <meta property="og:image" content="{% static 'web/img/logo.png' %}">
+        <meta name="twitter:image" content="{% static 'web/img/logo.png' %}">
     </head>
     <body>
         {% block content %}
         {% endblock %}
     </body>
-</html>    
+</html>
