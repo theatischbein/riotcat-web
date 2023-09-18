@@ -3,7 +3,6 @@
 import datetime
 from django.db import migrations, models
 import django.db.models.deletion
-from django.utils.timezone import utc
 
 
 class Migration(migrations.Migration):
@@ -33,7 +32,7 @@ class Migration(migrations.Migration):
             name='Work',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('dateFrom', models.DateTimeField(default=datetime.datetime(2020, 10, 15, 14, 19, 32, 347872, tzinfo=utc), verbose_name='Beginn')),
+                ('dateFrom', models.DateTimeField(default=datetime.datetime(2020, 10, 15, 14, 19, 32, 347872, tzinfo=datetime.timezone.utc), verbose_name='Beginn')),
                 ('dateTo', models.DateTimeField(null=True, verbose_name='Ende')),
                 ('duration', models.IntegerField(null=True, verbose_name='Dauer')),
                 ('category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='worktime.category', verbose_name='Kategory')),

@@ -1,10 +1,8 @@
 from django.core.exceptions import ValidationError
-from django.db.models import Q
 from django import forms
-import datetime
 
-from django.forms.models import ModelForm
 from . import models
+
 
 class WorkCreateForm(forms.ModelForm):
     class Meta:
@@ -18,8 +16,12 @@ class WorkCreateForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super(WorkCreateForm, self).clean()
-        if models.Work.objects.filter(type=models.Types.WORK).filter(dateTo__isnull=True).all() and cleaned_data["type"] == models.Types.WORK:
-            raise ValidationError("Es existiert noch ein nicht abgeschlossener Arbeitszeitraum!")
+        if models.Work.objects.filter(type=models.Types.WORK)\
+                .filter(dateTo__isnull=True).all() \
+                and cleaned_data["type"] == models.Types.WORK:
+                    raise ValidationError(
+                            "Es existiert noch ein nicht abgeschlossener Arbeitszeitraum!"
+                            )
 
     def save(self, commit=True):
         work = super(WorkCreateForm, self).save(commit=False)
