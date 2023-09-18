@@ -167,6 +167,8 @@ STATIC_URL = '/static/'
 LOGIN_URL = '/admin/login/'
 SESSION_COOKIE_DOMAIN = ".riotcat.org"
 
+CSRF_TRUSTED_ORIGINS = ['https://work.riotcat.org', 'https://riotcat.org']
+
 try:
     from .development_settings import *
 except ImportError:
