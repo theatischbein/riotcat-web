@@ -40,13 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'crispy_forms',
-    'ckeditor_uploader',
-    'ckeditor',
     'worktime',
 ]
-
-CKEDITOR_BASEPATH = "/static/ckeditor/ckeditor/"
-CKEDITOR_UPLOAD_PATH = "uploads/"
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
