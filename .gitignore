@@ -1,5 +1,7 @@
 # dev settings
 riotcat/development_settings.py
+riotcat/production_settings.py
+static/
 
 
 # Byte-compiled / optimized / DLL files

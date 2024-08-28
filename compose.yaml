@@ -1,0 +1,22 @@
+services:
+  work-time:
+    image: nginx
+    volumes:
+      - ./nginx-config/:/etc/nginx/conf.d/:ro
+      - ./static/:/var/www/html/static/:ro
+    networks:
+      - default
+      - proxy-backend
+    restart: always
+
+  app:
+    build: ./
+    volumes:
+      - ./db.sqlite3:/opt/riotcat-web/db.sqlite3:rw
+      - ./riotcat/production_settings.py:/opt/riotcat-web/riotcat/production_settings.py
+    restart: always
+
+networks:
+  proxy-backend:
+    name: proxy-backend
+    external: true
