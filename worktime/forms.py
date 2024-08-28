@@ -11,7 +11,7 @@ class WorkCreateForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(WorkCreateForm, self).__init__(*args, **kwargs)
-        self.initial['category'] = models.Category.objects.first()
+        self.initial['category'] = kwargs["initial"]["current_category"]
         self.initial['type'] = models.Types.WORK
 
     def clean(self):

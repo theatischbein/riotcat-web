@@ -72,9 +72,20 @@ class WorkCreateView(CreateView):
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
+        category_id = request.session.get('category', "")
+        if category_id:
+            self.current_category = models.Category.objects.get(id=category_id)
+        else:
+            self.current_category = models.Category.objects.first()
+
         if request.method == "POST":
             request.session['form'] = self.get_form(form_class=self.get_form_class()).non_field_errors()
         return super(WorkCreateView, self).dispatch(request, *args, **kwargs)
+
+    def get_initial(self):
+        initial = super().get_initial()
+        initial['current_category'] = self.current_category
+        return initial
 
     def form_invalid(self, form):
         super(WorkCreateView, self).form_invalid(form)
@@ -88,7 +99,6 @@ class WorkUpdateView(UpdateView):
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
-        print(kwargs)
         return super(WorkUpdateView, self).dispatch(*args, **kwargs)
 
 class WorkDeleteView(DeleteView):
